@@ -20,6 +20,7 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include <cassert>
 #include <typeinfo>
 #include "dynamic-graph/dynamic-graph-api.h"
@@ -41,6 +42,7 @@ namespace dynamicgraph {
       operator Vector () const;
       operator Eigen::MatrixXd () const;
       operator Eigen::Matrix4d () const;
+      operator std::vector<Value> () const;
     private:
       const Value* value_;
     };
@@ -58,6 +60,7 @@ namespace dynamicgraph {
 	VECTOR,
 	MATRIX,
 	MATRIX4D,
+  VALUES,
 	NB_TYPES
       };
       ~Value();
@@ -71,6 +74,7 @@ namespace dynamicgraph {
       explicit Value(const Vector& value);
       explicit Value(const Eigen::MatrixXd& value);
       explicit Value(const Eigen::Matrix4d& value);
+      explicit Value(const std::vector<Value>& value);
       /// Copy constructor
       Value(const Value& value);
       // Construct an empty value (None)
@@ -108,6 +112,8 @@ namespace dynamicgraph {
       Vector vectorValue() const;
       Eigen::MatrixXd matrixXdValue() const;
       Eigen::Matrix4d matrix4dValue() const;
+      std::vector<Value> valuesValue() const;
+      const std::vector<Value>& constValuesValue() const;
       Type type_;
       const void* const value_;
     };

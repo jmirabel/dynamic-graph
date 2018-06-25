@@ -65,10 +65,13 @@ namespace dynamicgraph {
     {
       return value_->matrixXdValue();
     }
-
     EitherType::operator Eigen::Matrix4d() const
     {
       return value_->matrix4dValue();
+    }
+    EitherType::operator std::vector<Value>() const
+    {
+      return value_->valuesValue();
     }
 
     void Value::deleteValue ()
@@ -100,6 +103,9 @@ namespace dynamicgraph {
 	break;
       case MATRIX4D:
 	delete(const Eigen::Matrix4d*)value_;
+	break;
+      case VALUES:
+	delete(const std::vector<Value>*)value_;
 	break;
       default:;
       }
@@ -145,6 +151,10 @@ namespace dynamicgraph {
 						 value_(new Eigen::Matrix4d(value))
     {
     }
+    Value::Value(const std::vector<Value>& value) : type_(VALUES),
+						 value_(new std::vector<Value>(value))
+    {
+    }
 
 
     Value::Value(const Value& value) : type_(value.type_),
@@ -184,6 +194,9 @@ namespace dynamicgraph {
 	break;
       case Value::MATRIX4D:
 	copy = new Eigen::Matrix4d(value.matrix4dValue());
+	break;
+      case Value::VALUES:
+	copy = new std::vector<Value>(value.valuesValue());
 	break;
       default:
 	abort();
@@ -293,6 +306,22 @@ namespace dynamicgraph {
 			      "value is not a Eigen matrix4d");
     }
 
+    std::vector<Value> Value::valuesValue() const
+    {
+      if(type_ == VALUES)
+	return *((const std::vector<Value>*)value_);
+      throw ExceptionAbstract(ExceptionAbstract::TOOLS,
+			      "value is not a vector of Value");
+    }
+
+    const std::vector<Value>& Value::constValuesValue() const
+    {
+      if(type_ == VALUES)
+	return *((const std::vector<Value>*)value_);
+      throw ExceptionAbstract(ExceptionAbstract::TOOLS,
+			      "value is not a vector of Value");
+    }
+
     std::string Value::typeName(Type type)
     {
       switch(type) {
@@ -314,6 +343,8 @@ namespace dynamicgraph {
 	return std::string("matrixXd");
       case MATRIX4D:
 	return std::string("matrix4d");
+      case VALUES:
+	return std::string("vector<Value>");
       default:
 	return std::string("unknown");
       }
@@ -351,6 +382,15 @@ namespace dynamicgraph {
       case Value::MATRIX4D:
 	os << value.matrix4dValue();
 	break;
+      case Value::VALUES:
+        {
+          const std::vector<Value>& vals = value.constValuesValue();
+          os << "[ ";
+          for (std::size_t i = 0; i < vals.size(); ++i)
+            os << vals[i] << ", ";
+          os << "]";
+        }
+        break;
       default:
 	return os;
       }
@@ -366,6 +406,7 @@ namespace dynamicgraph {
     template<> const Value::Type ValueHelper<Vector>::TypeID = Value::VECTOR;
     template<> const Value::Type ValueHelper<Eigen::MatrixXd>::TypeID = Value::MATRIX;
     template<> const Value::Type ValueHelper<Eigen::Matrix4d>::TypeID = Value::MATRIX4D;
+    template<> const Value::Type ValueHelper<std::vector<Value> >::TypeID = Value::VALUES;
 
   } // namespace command
 } //namespace dynamicgraph
