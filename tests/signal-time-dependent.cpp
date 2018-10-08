@@ -106,6 +106,12 @@ BOOST_AUTO_TEST_CASE (signaltimedependent)
   sigDouble_t sig5 ("Sig5");
   sigString_t sig6 ("Sig6");
 
+  std::string name;
+  sig5.getClassName(name) ;
+  BOOST_CHECK_EQUAL(name, "double");
+  sig6.getClassName(name) ;
+  BOOST_CHECK_EQUAL(name, "string");
+
   sigString_t sig4(sig5, "Sig4");
   sigString_t sig2(sig4 << sig4 << sig4 << sig6, "Sig2");
   sigDouble_t sig3(sig2 << sig5 << sig6, "Sig3");

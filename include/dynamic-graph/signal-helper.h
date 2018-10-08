@@ -24,6 +24,8 @@
 #include <dynamic-graph/signal-ptr.h>
 #include <dynamic-graph/signal-time-dependent.h>
 
+#include <dynamic-graph/linear-algebra.h>
+
 /* --- MACROS ---------------------------------------------------------- */
 
 #define DECLARE_SIGNAL( name,IO,type )    ::dynamicgraph::Signal<type,int> name##S##IO
@@ -42,7 +44,17 @@
   name##SOUT( boost::bind(&  EntityClassName::name##SOUT_function,this,_1,_2), \
 	      dep,getClassName()+"("+getName()+")::output("+#type+")::"+#name )
 
+#define SIGNAL_TYPE_NAME_DECL(type,name)                                       \
+  template <> inline std::string signalTypeName<type> () { return std::string(#name); }
 
-
+namespace dynamicgraph {
+template <class T> inline std::string signalTypeName () { return typeid(T).name(); }
+SIGNAL_TYPE_NAME_DECL(int,int)
+SIGNAL_TYPE_NAME_DECL(unsigned int,unsigned)
+SIGNAL_TYPE_NAME_DECL(double,double)
+SIGNAL_TYPE_NAME_DECL(std::string,string)
+SIGNAL_TYPE_NAME_DECL(Vector,Vector)
+SIGNAL_TYPE_NAME_DECL(Matrix,Matrix)
+} // end of namespace dynamicgraph
 
 #endif // __dynamic_graph_signal_helper_H__
