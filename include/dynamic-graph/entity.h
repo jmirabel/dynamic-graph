@@ -106,6 +106,10 @@ namespace dynamicgraph
 		 const char *file="",
 		 int line=0);
 
+    RTLoggerStream sendStream(MsgType t=MSG_TYPE_INFO,
+		              const char *file="",
+		              int line=0);
+
     /// \brief Specify the verbosity level of the logger.
     void setLoggerVerbosityLevel(LoggerVerbosity lv)
     {logger_.setVerbosity(lv);}

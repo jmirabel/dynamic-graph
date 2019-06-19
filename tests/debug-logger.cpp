@@ -5,6 +5,8 @@
  * See LICENSE file
  *
  */
+#define ENABLE_RT_LOG
+
 #include <sstream>
 #include <iostream>
 #include <dynamic-graph/entity.h>
@@ -12,7 +14,6 @@
 #include "dynamic-graph/factory.h"
 #include "dynamic-graph/pool.h"
 
-#define ENABLE_RT_LOG
 #include <dynamic-graph/real-time-logger.h>
 #include <dynamic-graph/logger.h>
 
@@ -57,6 +58,15 @@ namespace dynamicgraph
       sendMsg("This is a message of level MSG_TYPE_INFO_STREAM",MSG_TYPE_INFO_STREAM);
       sendMsg("This is a message of level MSG_TYPE_WARNING_STREAM",MSG_TYPE_WARNING_STREAM);
       sendMsg("This is a message of level MSG_TYPE_ERROR_STREAM",MSG_TYPE_ERROR_STREAM);
+
+      sendStream(MSG_TYPE_DEBUG)          << "This is a streamed message of level MSG_TYPE_DEBUG "         <<  MSG_TYPE_DEBUG          << '\n';
+      sendStream(MSG_TYPE_INFO)           << "This is a streamed message of level MSG_TYPE_INFO "          <<  MSG_TYPE_INFO           << '\n';
+      sendStream(MSG_TYPE_WARNING)        << "This is a streamed message of level MSG_TYPE_WARNING "       <<  MSG_TYPE_WARNING        << '\n';
+      sendStream(MSG_TYPE_ERROR)          << "This is a streamed message of level MSG_TYPE_ERROR "         <<  MSG_TYPE_ERROR          << '\n';
+      sendStream(MSG_TYPE_DEBUG_STREAM)   << "This is a streamed message of level MSG_TYPE_DEBUG_STREAM "  <<  MSG_TYPE_DEBUG_STREAM   << '\n';
+      sendStream(MSG_TYPE_INFO_STREAM)    << "This is a streamed message of level MSG_TYPE_INFO_STREAM "   <<  MSG_TYPE_INFO_STREAM    << '\n';
+      sendStream(MSG_TYPE_WARNING_STREAM) << "This is a streamed message of level MSG_TYPE_WARNING_STREAM "<<  MSG_TYPE_WARNING_STREAM << '\n';
+      sendStream(MSG_TYPE_ERROR_STREAM)   << "This is a streamed message of level MSG_TYPE_ERROR_STREAM "  <<  MSG_TYPE_ERROR_STREAM   << '\n';
 
       logger_.countdown();
 

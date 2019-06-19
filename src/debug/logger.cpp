@@ -86,6 +86,39 @@ namespace dynamicgraph
     dgRTLOG() << msg.c_str() << "\n";
   }
 
+  RTLoggerStream Logger::sendStream (MsgType type, const char* file, int line)
+  {
+    if(m_lv==VERBOSITY_NONE ||
+       (m_lv==VERBOSITY_ERROR && !isErrorMsg(type)) ||
+       (m_lv==VERBOSITY_WARNING_ERROR && !(isWarningMsg(type) || isErrorMsg(type))) ||
+       (m_lv==VERBOSITY_INFO_WARNING_ERROR && isDebugMsg(type)))
+      return RTLoggerStream ();
+
+    // if print is allowed by current verbosity level
+    if(isStreamMsg(type))
+      {
+        // check whether counter already exists
+        string id = file+toString(line);
+        map<string,double>::iterator it = m_stream_msg_counters.find(id);
+        if(it == m_stream_msg_counters.end())
+	  {
+	    // if counter doesn't exist then add one
+	    m_stream_msg_counters.insert(make_pair(id, 0.0));
+	    it = m_stream_msg_counters.find(id);
+	  }
+
+        // if counter is greater than 0 then decrement it and do not print
+        if(it->second>0.0)
+	  {
+	    it->second -= m_timeSample;
+            return RTLoggerStream ();
+	  }
+        else  // otherwise reset counter and print
+          it->second = m_streamPrintPeriod;
+      }
+    return ::dynamicgraph::RealTimeLogger::instance().front();
+  }
+
   bool Logger::setTimeSample(double t)
   {
     if(t<=0.0)

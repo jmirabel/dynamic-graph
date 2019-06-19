@@ -264,3 +264,11 @@ sendMsg(const std::string &msg,
 {
   logger_.sendMsg("["+name+"]"+msg,t,file,line);
 }
+
+RTLoggerStream Entity::
+sendStream(MsgType t,
+	   const char *file,
+	   int line)
+{
+  return logger_.sendStream(t,file,line) << "[" << name << "]";
+}

@@ -49,6 +49,7 @@ namespace dynamicgraph {
 #include <sstream>
 #include "boost/assign.hpp"
 #include <dynamic-graph/linear-algebra.h>
+#include <dynamic-graph/real-time-logger.h>
 
 namespace dynamicgraph {
 
@@ -57,10 +58,17 @@ namespace dynamicgraph {
 
 #define SEND_MSG(msg,type)         sendMsg(msg,type,__FILE__,__LINE__)
 
-#define SEND_DEBUG_STREAM_MSG(msg) SEND_MSG(msg,MSG_TYPE_DEBUG_STREAM)
-#define SEND_INFO_STREAM_MSG(msg)   SEND_MSG(msg,MSG_TYPE_INFO_STREAM)
+#define SEND_DEBUG_STREAM_MSG(msg)    SEND_MSG(msg,MSG_TYPE_DEBUG_STREAM)
+#define SEND_INFO_STREAM_MSG(msg)     SEND_MSG(msg,MSG_TYPE_INFO_STREAM)
 #define SEND_WARNING_STREAM_MSG(msg)  SEND_MSG(msg,MSG_TYPE_WARNING_STREAM)
 #define SEND_ERROR_STREAM_MSG(msg)    SEND_MSG(msg,MSG_TYPE_ERROR_STREAM)
+
+#define LOG_MSG2(type)         sendStream(type,__FILE__,__LINE__)
+
+#define LOG_DEBUG_STREAM_MSG()    LOG_MSG(MSG_TYPE_DEBUG_STREAM)
+#define LOG_INFO_STREAM_MSG()     LOG_MSG(MSG_TYPE_INFO_STREAM)
+#define LOG_WARNING_STREAM_MSG()  LOG_MSG(MSG_TYPE_WARNING_STREAM)
+#define LOG_ERROR_STREAM_MSG()    LOG_MSG(MSG_TYPE_ERROR_STREAM)
 
   template<typename T>
   std::string toString(const T& v, const int precision=3, const int width=-1)
@@ -173,6 +181,8 @@ namespace dynamicgraph {
      * printed only every streamPrintPeriod iterations.
      */
     void sendMsg(std::string msg, MsgType type, const char* file="", int line=0);
+
+    RTLoggerStream sendStream(MsgType type, const char* file="", int line=0);
 
     /** Set the sampling time at which the method countdown()
        * is going to be called. */

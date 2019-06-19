@@ -3,16 +3,16 @@
  * Olivier Stasse
  *
  */
+#define VP_DEBUG 1
+#define VP_DEBUG_MODE 50
+#define VP_TEMPLATE_DEBUG_MODE 50
+
 #include <sstream>
 #include <iostream>
 #include <dynamic-graph/entity.h>
 #include <dynamic-graph/exception-factory.h>
 #include "dynamic-graph/factory.h"
 #include "dynamic-graph/pool.h"
-
-#define VP_DEBUG 1
-#define VP_DEBUG_MODE 50
-#define VP_TEMPLATE_DEBUG_MODE 50
 
 
 #include <dynamic-graph/debug.h>
