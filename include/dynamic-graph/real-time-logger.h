@@ -54,15 +54,16 @@ namespace dynamicgraph
   class RTLoggerStream
   {
     public:
-      RTLoggerStream (RealTimeLogger* logger, std::ostream& os) : logger_(logger), os_ (os) {}
-      template <typename T> inline RTLoggerStream& operator<< (T  t) { if (logger_!=NULL) os_ << t; return *this; }
-      inline RTLoggerStream& operator<< (std::ostream& (*pf)(std::ostream&)) { if (logger_!=NULL) os_ << pf; return *this; }
+      RTLoggerStream () : logger_(NULL), os_ (NULL) {}
+      RTLoggerStream (RealTimeLogger* logger, std::ostream* os) : logger_(logger), os_ (os) {}
+      template <typename T> inline RTLoggerStream& operator<< (T  t) { if (logger_!=NULL) *os_ << t; return *this; }
+      inline RTLoggerStream& operator<< (std::ostream& (*pf)(std::ostream&)) { if (logger_!=NULL) *os_ << pf; return *this; }
 
       ~RTLoggerStream();
     private:
 
       RealTimeLogger* logger_;
-      std::ostream& os_;
+      std::ostream* os_;
   };
   /// \endcond DEVEL
 

@@ -49,26 +49,28 @@ namespace dynamicgraph
     // If no output or if buffer is full, discard message.
     if (outputs_.empty() || full()) {
       nbDiscarded_++;
-      return RTLoggerStream (NULL, oss_);
+      return RTLoggerStream ();
     }
     bool alone = wmutex.try_lock();
     // If someone is writting, discard message.
     if (!alone) {
       nbDiscarded_++;
-      return RTLoggerStream (NULL, oss_);
+      return RTLoggerStream ();
     }
     Data* data = buffer_[backIdx_];
     //backIdx_ = (backIdx_+1) % buffer_.size();
     // Reset position of cursor
     data->buf.pubseekpos(0);
     oss_.rdbuf(&data->buf);
-    return RTLoggerStream (this, oss_);
+    return RTLoggerStream (this, &oss_);
   }
 
   RTLoggerStream::~RTLoggerStream()
   {
-    os_ << std::ends;
-    if (logger_ != NULL) logger_->frontReady();
+    if (os_ != NULL) {
+      *os_ << std::ends;
+      logger_->frontReady();
+    }
   }
 
   struct RealTimeLogger::thread
